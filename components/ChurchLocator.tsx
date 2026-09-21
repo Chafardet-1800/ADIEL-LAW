@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Institution } from "@/services/publicData";
 
 // Función utilitaria para generar el slug que hablamos (Punto 3)
 function slugify(text: string) {
@@ -15,18 +16,10 @@ function slugify(text: string) {
     .replace(/-+$/, "");
 }
 
-// Tipo de dato básico para la vista previa
-interface ChurchPreview {
-  id: string;
-  name: string;
-  address: string;
-  logo_url?: string;
-}
-
 export default function ChurchLocator({
   churches,
 }: {
-  churches: ChurchPreview[];
+  churches: Institution[];
 }) {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -34,7 +27,7 @@ export default function ChurchLocator({
   const filteredChurches = churches.filter(
     (church) =>
       church.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      church.address.toLowerCase().includes(searchTerm.toLowerCase()),
+      (church.address ?? "").toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (

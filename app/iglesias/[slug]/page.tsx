@@ -1,57 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { getIdFromSlug, getInstitutionById } from "@/services/publicData";
 import { Metadata } from "next";
 import Image from "next/image";
-
-// Función utilitaria para extraer el ID del final de la URL
-function getIdFromSlug(slug: string) {
-  // Separa el string por guiones y toma el último elemento (que es nuestro ID de Mongo)
-  const parts = slug.split("-");
-  return parts[parts.length - 1];
-}
-
-// Simulamos la llamada a tu API
-async function getChurchData(params: { slug: string }) {
-  const id = getIdFromSlug(params.slug);
-  // const res = await fetch(`https://tuapi.com/iglesias/${id}`);
-  // return res.json();
-  return {
-    location: {
-      coordinates: [-66.9036, 10.4806],
-      type: "Point",
-    },
-    metadata: {
-      created_at: "2026-06-09T17:53:38.574Z",
-      is_deleted: false,
-      updated_at: "2026-06-09T17:53:38.574Z",
-    },
-    social_links: {
-      facebook: null,
-      instagram: null,
-      tiktok: null,
-      x: null,
-    },
-    id: "6a285322706bc80045db1aff",
-    name: "Iglesia Bautista Central",
-    address: "Av. Principal con Calle 2, Caracas, Miranda",
-    building_images: ["https://midominio.com/fachada.jpg"],
-    entity_type: "CHURCH",
-    history: "Nuestra iglesia fue fundada en 1950...",
-    logo_url: "https://midominio.com/logo-iglesia.png",
-    members_images: [],
-    mission: "Compartir la palabra de Dios.",
-    slogan: "Luz en la ciudad",
-    url_maps: "https://maps.app.goo.gl/ejemplo",
-    vision: "Alcanzar a toda la comunidad.",
-    event_ids: [],
-  };
-}
 
 export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const church = await getChurchData(params);
+  const resolvedParams = await params;
+  const id = getIdFromSlug(resolvedParams.slug);
+  const church: any = await getInstitutionById(id);
+
   return {
     title: church.name,
     description: church.mission || church.history.substring(0, 150),
@@ -67,7 +27,9 @@ export default async function ChurchDetailPage({
 }: {
   params: { slug: string };
 }) {
-  const church: any = await getChurchData(params);
+  const resolvedParams = await params;
+  const id = getIdFromSlug(resolvedParams.slug);
+  const church: any = await getInstitutionById(id);
 
   // Datos estructurados para Google (LocalBusiness/Church)
   const jsonLd = {

@@ -1,18 +1,8 @@
+import { Post } from "@/services/publicData";
 import Image from "next/image";
 import Link from "next/link";
 
-// Interfaz basada en el JSON de tu base de datos
-export interface PostPreview {
-  id: string; // Transformaremos el ObjectId a string al traerlo de la BD
-  title: string;
-  slug: string;
-  content: string;
-  images: string[];
-  tags: string[];
-  published_at: string;
-}
-
-export default function RecentPosts({ posts }: { posts: PostPreview[] }) {
+export default function RecentPosts({ posts }: { posts: Post[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {posts.map((post) => {
@@ -20,14 +10,13 @@ export default function RecentPosts({ posts }: { posts: PostPreview[] }) {
         const postUrl = `/noticias/${post.slug}-${post.id}`;
 
         // Formateamos la fecha para que sea legible (Ej: "9 de junio de 2026")
-        const formattedDate = new Date(post.published_at).toLocaleDateString(
-          "es-ES",
-          {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          },
-        );
+        const formattedDate = new Date(
+          post.metadata.published_at,
+        ).toLocaleDateString("es-ES", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
 
         return (
           <Link
@@ -42,6 +31,9 @@ export default function RecentPosts({ posts }: { posts: PostPreview[] }) {
                   src={post.images[0]}
                   alt={post.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  width={400}
+                  height={200}
+                  unoptimized
                 />
               ) : (
                 /* Fallback elegante si el post no tiene imagen (Gradient dinámico) */
@@ -67,7 +59,7 @@ export default function RecentPosts({ posts }: { posts: PostPreview[] }) {
             <div className="p-6 flex flex-col flex-1">
               {/* Etiqueta <time> semántica: Vital para Google News y SEO */}
               <time
-                dateTime={post.published_at}
+                dateTime={post.metadata.published_at}
                 className="text-xs font-semibold text-zinc-500 mb-2"
               >
                 {formattedDate}

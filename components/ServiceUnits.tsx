@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image"; // Recomendado para optimizar imágenes si los dominios están configurados
+import { Institution } from "@/services/publicData";
 
 // Función utilitaria para generar el slug SEO-friendly
 function slugify(text: string) {
@@ -13,21 +14,7 @@ function slugify(text: string) {
     .replace(/-+$/, "");
 }
 
-// 1. ACTUALIZACIÓN DE LA INTERFAZ
-// Refleja exactamente lo que manda tu backend para Service Units
-export interface ServiceUnit {
-  id: string;
-  name: string;
-  entity_type: string;
-  mission?: string;
-  history?: string;
-  slogan?: string | null;
-  logo_url?: string | null;
-  // Puedes agregar el resto de campos (location, social_links) si los usas a futuro,
-  // pero para esta tarjeta visual estos son los vitales.
-}
-
-export default function ServiceUnits({ units }: { units: ServiceUnit[] }) {
+export default function ServiceUnits({ units }: { units: Institution[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {units.map((unit) => {
@@ -50,11 +37,13 @@ export default function ServiceUnits({ units }: { units: ServiceUnit[] }) {
             {/* 2. RENDERIZADO DEL LOGO (Manejo de logo_url real o fallback) */}
             <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl shadow-sm mb-6 border border-zinc-100 group-hover:scale-105 transition-transform duration-300 overflow-hidden relative">
               {unit.logo_url ? (
-                // Usamos <img> estándar. Si configuras remotePatterns en next.config.js, puedes usar <Image> de Next
                 <Image
                   src={unit.logo_url}
                   alt={`Logo de ${unit.name}`}
                   className="w-full h-full object-cover"
+                  width={64}
+                  height={64}
+                  unoptimized
                 />
               ) : (
                 // Fallback: Si no tiene logo, mostramos la primera letra de su nombre
