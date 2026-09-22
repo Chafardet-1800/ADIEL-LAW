@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Event } from "@/services/publicData"; // Importamos la interfaz que creamos en el servicio
+import { Event } from "@/src/services/publicData"; // Importamos la interfaz que creamos en el servicio
 import Image from "next/image";
 
 // Utilidad para URLs amigables con SEO

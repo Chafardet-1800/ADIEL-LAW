@@ -1,4 +1,4 @@
-import { getIdFromSlug, getInstitutionById } from "@/services/publicData";
+import { getIdFromSlug, getInstitutionById } from "@/src/services/publicData";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";

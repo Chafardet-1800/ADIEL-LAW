@@ -25,9 +25,8 @@ export async function fetchApi<T>(
   });
 
   if (!response.ok) {
-    // Aquí podrías manejar errores de autenticación (ej: 401 para desloguear)
     throw new Error(
-      `Error en la API: ${response.status} ${response.statusText}`,
+      `Error en la API ${endpoint}: ${response.status} ${response.statusText}`,
     );
   }
 

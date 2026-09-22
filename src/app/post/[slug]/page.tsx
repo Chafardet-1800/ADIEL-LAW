@@ -1,5 +1,5 @@
 // src/app/(public)/noticias/[slug]/page.tsx
-import { getIdFromSlug, getPostById } from "@/services/publicData";
+import { getIdFromSlug, getPostById } from "@/src/services/publicData";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";

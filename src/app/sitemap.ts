@@ -1,4 +1,3 @@
-// src/app/sitemap.ts
 import { MetadataRoute } from "next";
 
 // Función para limpiar strings (convertir "Iglesia Bautista!" a "iglesia-bautista")

@@ -1,4 +1,4 @@
-import { Post } from "@/services/publicData";
+import { Post } from "@/src/services/publicData";
 import Image from "next/image";
 import Link from "next/link";
 

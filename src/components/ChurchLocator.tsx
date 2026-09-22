@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Institution } from "@/services/publicData";
+import { Institution } from "@/src/services/publicData";
 
 // Función utilitaria para generar el slug que hablamos (Punto 3)
 function slugify(text: string) {

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getEventoById, getIdFromSlug } from "@/services/publicData";
+import { getEventoById, getIdFromSlug } from "@/src/services/publicData";
 
 // Tipado estricto para App Router moderno
 type PageProps = {

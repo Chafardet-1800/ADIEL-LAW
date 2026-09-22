@@ -1,13 +1,13 @@
-import ChurchLocator from "@/components/ChurchLocator";
-import RecentEvents from "@/components/RecentEvents";
-import RecentPosts from "@/components/RecentPosts";
-import ServiceUnits from "@/components/ServiceUnits";
+import ChurchLocator from "@/src/components/ChurchLocator";
+import RecentEvents from "@/src/components/RecentEvents";
+import RecentPosts from "@/src/components/RecentPosts";
+import ServiceUnits from "@/src/components/ServiceUnits";
 import {
   getChurches,
   getEvents,
   getPosts,
   getServiceUnits,
-} from "@/services/publicData";
+} from "@/src/services/publicData";
 import Link from "next/link";
 
 export default async function HomePage() {
@@ -23,10 +23,10 @@ export default async function HomePage() {
 
   return (
     // Contenedor principal con un fondo de degradado suave y moderno
-    <div className="relative min-h-screen bg-gradient-to-br from-zinc-50 via-blue-50/30 to-zinc-100 overflow-hidden">
+    <div className="relative min-h-screen bg-linear-to-br from-zinc-50 via-blue-50/30 to-zinc-100 overflow-hidden">
       {/* Elementos decorativos de fondo (Figuras borrosas/Glassmorphism) */}
       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-[#0000fe]/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-[40%] right-[-5%] w-[30rem] h-[30rem] bg-blue-300/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-[40%] right-[-5%] w-120 h-120 bg-blue-300/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Enlace de accesibilidad */}
       <a
@@ -44,7 +44,7 @@ export default async function HomePage() {
           </span>
           <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight text-zinc-900 mb-6 leading-tight">
             Uniendo liderazgo y <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0000fe] to-blue-400">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-[#0000fe] to-blue-400">
               propósito en cada evento
             </span>
           </h1>
@@ -94,7 +94,7 @@ export default async function HomePage() {
                   key={i}
                   className="flex items-center gap-3 text-zinc-700 font-medium"
                 >
-                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-[#0000fe] flex items-center justify-center">
+                  <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 text-[#0000fe] flex items-center justify-center">
                     ✓
                   </span>
                   {item}
@@ -103,9 +103,9 @@ export default async function HomePage() {
             </ul>
           </div>
 
-          <div className="relative h-[400px] w-full rounded-3xl overflow-hidden shadow-2xl group">
+          <div className="relative h-100 w-full rounded-3xl overflow-hidden shadow-2xl group">
             {/* Aquí iría un componente <Image> de Next.js. Usamos un div simulado por ahora */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent z-10" />
             <div className="w-full h-full bg-zinc-300 group-hover:scale-105 transition-transform duration-700 ease-in-out" />
             <div className="absolute bottom-6 left-6 z-20">
               <p className="text-white font-bold text-xl">

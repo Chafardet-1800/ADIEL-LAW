@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image"; // Recomendado para optimizar imágenes si los dominios están configurados
-import { Institution } from "@/services/publicData";
+import { Institution } from "@/src/services/publicData";
 
 // Función utilitaria para generar el slug SEO-friendly
 function slugify(text: string) {
