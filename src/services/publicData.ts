@@ -114,6 +114,24 @@ interface Activeschedule {
   end_time: string;
 }
 
+export interface EventRegister {
+  metadata: Metadata;
+  deliverables_received: string[];
+  id: string;
+  status: string;
+  email: string;
+  reason_for_rejection?: string;
+  form_data: Map<string, string>;
+  register_data: Map<string, string>;
+  show_register_data: boolean;
+  event_id: string;
+  event: EventInfo;
+}
+interface EventInfo {
+  name: string;
+  init_date: string;
+}
+
 /**
  * ==========================================
  * 1. PETICIONES MAESTRAS AL BACKEND (HTTP)
@@ -142,6 +160,15 @@ export const getEvents = cache(async (): Promise<Event[]> => {
     next: { revalidate: 3600, tags: ["events"] },
   });
 });
+
+// Trae ABSOLUTAMENTE TODOS los eventos
+export const getEventRegisters = cache(
+  async (id?: string): Promise<EventRegister> => {
+    return fetchApi<EventRegister>(`/event-responses/external/${id}`, {
+      next: { revalidate: 3600, tags: ["events"] },
+    });
+  },
+);
 
 /**
  * ==========================================

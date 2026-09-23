@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 // Tipamos el schedule según tu backend
 interface ScheduleItem {
@@ -14,6 +14,15 @@ export default function EventSchedule({
 }: {
   schedule: ScheduleItem[];
 }) {
+  // 1. ESTADO PARA EVITAR EL HYDRATION ERROR
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    // Defer setting mounted to the next tick to avoid synchronous state update
+    const t = setTimeout(() => setIsMounted(true), 0);
+    return () => clearTimeout(t);
+  }, []);
+
   // Agrupamos las actividades por día
   const groupedSchedule = useMemo(() => {
     const groups: Record<string, ScheduleItem[]> = {};
@@ -36,6 +45,27 @@ export default function EventSchedule({
 
   const availableDays = Object.keys(groupedSchedule);
   const [selectedDay, setSelectedDay] = useState(availableDays[0]);
+
+  // 2. RETORNO DE SEGURIDAD PARA EL SERVIDOR (Skeleton)
+  // Mientras el servidor renderiza, mostramos un "Skeleton" o estado de carga
+  // Esto evita el error de hidratación garantizando que servidor y cliente coincidan
+  if (!isMounted) {
+    return (
+      <section className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-sm border border-blue-50 mb-12">
+        <div className="animate-pulse">
+          <div className="h-8 bg-blue-100 rounded w-1/3 mb-8"></div>
+          <div className="flex gap-3 mb-8">
+            <div className="h-10 w-24 bg-blue-50 rounded-xl"></div>
+            <div className="h-10 w-24 bg-blue-50 rounded-xl"></div>
+          </div>
+          <div className="space-y-4">
+            <div className="h-16 bg-blue-50/50 rounded-2xl w-full"></div>
+            <div className="h-16 bg-blue-50/50 rounded-2xl w-full"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (!schedule || schedule.length === 0) return null;
 
