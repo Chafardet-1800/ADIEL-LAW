@@ -75,7 +75,7 @@ export default function RootLayout({
     // Es CRÍTICO declarar el lang="es" para SEO y lectores de pantalla (Accesibilidad)
     <html lang="es" className="scroll-smooth">
       <body
-        className={`${inter.className} bg-white text-zinc-900 antialiased selection:bg-[#0000fe] selection:text-white`}
+        className={`${inter.className} bg-white text-zinc-900 antialiased selection:bg-blue-700 selection:text-white`}
       >
         {/* Aquí luego inyectaremos el <Navbar /> semántico */}
         <main id="main-content" className="flex flex-col min-h-screen">

@@ -65,6 +65,10 @@ interface Metadata {
 
 // Interfaz adaptada a tu JSON de Events
 export interface Event {
+  metadata: Metadata;
+  active_schedule: Activeschedule[];
+  form_fields: Formfield[];
+  deliverables: Deliverable[];
   id: string;
   name: string;
   description: string;
@@ -73,24 +77,41 @@ export interface Event {
   end_date: string;
   images: string[];
   documents: string[];
+  created_by: string;
+  event_lead: string;
   requires_registration: boolean;
   institution_ids: string[];
-  active_schedule: Array<{
-    active_name: string;
-    start_time: string;
-    end_time: string;
-  }>;
-  deliverables: Array<{
-    id: string;
-    name: string;
-    total_quota: number;
-  }>;
-  lead: {
-    name: string;
-    lastname: string;
-    phone_number: string;
-  };
-  institutions: Array<{ name: string }>;
+  participant_ids: string[];
+  creator: Creator;
+  lead: Lead;
+  institutions: Creator[];
+}
+interface Lead {
+  name: string;
+  lastname: string;
+  phone_number: string;
+}
+interface Creator {
+  name: string;
+}
+export interface Deliverable {
+  id: string;
+  name: string;
+  total_quota: number;
+}
+interface Formfield {
+  name: string;
+  key: string;
+  pattern?: string;
+  placeholder?: string;
+  required: boolean;
+  type: string;
+  list_value: string[];
+}
+interface Activeschedule {
+  active_name: string;
+  start_time: string;
+  end_time: string;
 }
 
 /**
@@ -103,15 +124,14 @@ export interface Event {
 
 // Trae ABSOLUTAMENTE TODAS las instituciones
 export const getAllInstitutions = cache(async (): Promise<Institution[]> => {
-  // Asegúrate de que este endpoint en tu backend devuelva tanto iglesias como unidades
   return fetchApi<Institution[]>("/institutions", {
     next: { revalidate: 3600, tags: ["institutions"] },
   });
 });
 
 // Trae ABSOLUTAMENTE TODOS los posts
-export const getPosts = cache(async (): Promise<Post[]> => {
-  return fetchApi<Post[]>("/posts", {
+export const getPosts = cache(async (id?: string): Promise<Post[]> => {
+  return fetchApi<Post[]>(id ? `/posts/?institutionId=${id}` : "/posts", {
     next: { revalidate: 3600, tags: ["posts"] },
   });
 });
@@ -154,6 +174,7 @@ export const getInstitutionById = async (
   id: string,
 ): Promise<Institution | undefined> => {
   const allInstitutions = await getAllInstitutions();
+
   return allInstitutions.find((inst) => inst.id === id);
 };
 

@@ -32,7 +32,7 @@ export default function ChurchLocator({
 
   return (
     // Contenedor principal: Altura fija (600px) para no dañar el scroll de la página principal
-    <div className="w-full h-[600px] flex flex-col lg:flex-row rounded-3xl overflow-hidden border-2 border-white shadow-xl bg-white/40 backdrop-blur-md">
+    <div className="w-full h-150 flex flex-col lg:flex-row rounded-3xl overflow-hidden border-2 border-white shadow-xl bg-white/40 backdrop-blur-md">
       {/* PANEL IZQUIERDO: Buscador y Lista (1/3 del ancho en desktop) */}
       <div className="w-full lg:w-1/3 flex flex-col bg-white/60 border-b lg:border-b-0 lg:border-r border-white/50 z-10">
         {/* Buscador Fijo */}

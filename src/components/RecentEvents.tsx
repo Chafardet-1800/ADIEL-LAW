@@ -53,7 +53,7 @@ export default function RecentEvents({ events }: { events: Event[] }) {
                 />
               ) : (
                 // Fallback si el evento no tiene imagen
-                <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-[#0000fe] opacity-80" />
+                <div className="absolute inset-0 bg-linear-to-tr from-blue-600 to-[#0000fe] opacity-80" />
               )}
 
               <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />

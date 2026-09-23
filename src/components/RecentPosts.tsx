@@ -7,7 +7,7 @@ export default function RecentPosts({ posts }: { posts: Post[] }) {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {posts.map((post) => {
         // Mantenemos nuestra estrategia (Punto 3): slug del backend + ID
-        const postUrl = `/noticias/${post.slug}-${post.id}`;
+        const postUrl = `/post/${post.slug}-${post.id}`;
 
         // Formateamos la fecha para que sea legible (Ej: "9 de junio de 2026")
         const formattedDate = new Date(
@@ -22,7 +22,7 @@ export default function RecentPosts({ posts }: { posts: Post[] }) {
           <Link
             href={postUrl}
             key={post.id}
-            className="group flex flex-col bg-white/50 backdrop-blur-md border border-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
+            className="group flex flex-col bg-white backdrop-blur-md border border-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
           >
             {/* Contenedor de la Imagen */}
             <div className="w-full h-48 relative overflow-hidden bg-zinc-200">
@@ -37,7 +37,7 @@ export default function RecentPosts({ posts }: { posts: Post[] }) {
                 />
               ) : (
                 /* Fallback elegante si el post no tiene imagen (Gradient dinámico) */
-                <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-[#0000fe] opacity-80 flex items-center justify-center">
+                <div className="absolute inset-0 bg-linear-to-tr from-blue-600 to-[#0000fe] opacity-80 flex items-center justify-center">
                   <span className="text-white/50 text-4xl">📰</span>
                 </div>
               )}

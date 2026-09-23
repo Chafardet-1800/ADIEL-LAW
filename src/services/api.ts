@@ -25,6 +25,11 @@ export async function fetchApi<T>(
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      cookieStore.set("session_token", "");
+      throw new Error("No autorizado");
+    }
+
     throw new Error(
       `Error en la API ${endpoint}: ${response.status} ${response.statusText}`,
     );
