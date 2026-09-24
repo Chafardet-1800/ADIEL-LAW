@@ -59,7 +59,6 @@ export default async function EventDetailPage({ params }: PageProps) {
   if (token) {
     try {
       userRegistration = await getEventRegisters(id);
-      console.log(userRegistration);
     } catch (error) {
       console.error("Error obteniendo el registro del usuario:", error);
     }

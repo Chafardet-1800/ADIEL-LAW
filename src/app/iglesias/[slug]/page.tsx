@@ -234,19 +234,27 @@ export default async function ChurchDetailPage({ params }: PageProps) {
         {/* --- MAPA DE UBICACIÓN --- */}
         {church.location?.coordinates && (
           <section className="bg-white/60 backdrop-blur-md p-4 rounded-[2.5rem] shadow-lg shadow-blue-900/5 border border-white">
-            <h2 className="text-2xl font-extrabold text-blue-950 mb-4 px-6 pt-4">
-              Ubicación
+            <h2 className="text-2xl font-extrabold text-blue-950 mb-4 px-6 pt-4 flex items-center gap-2">
+              <span className="text-blue-700">📍</span> Ubicación
             </h2>
-            <div className="w-full h-100 rounded-[2rem] overflow-hidden bg-blue-50 border-4 border-white shadow-inner">
-              <iframe
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                loading="lazy"
-                allowFullScreen
-                referrerPolicy="no-referrer-when-downgrade"
-                src={`https://www.google.com/maps/embed/v1/place?key=TU_API_KEY_DE_GOOGLE&q=${church.location.coordinates[1]},${church.location.coordinates[0]}`}
-              />
+            <div className="w-full h-100 rounded-[2rem] overflow-hidden bg-blue-50 border-4 border-white shadow-inner relative group">
+              {/* Leemos la key de process.env */}
+              {process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ? (
+                <iframe
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${church.location.coordinates[1]},${church.location.coordinates[0]}&zoom=16`}
+                  className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.02]"
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center bg-blue-100 text-blue-800 font-bold">
+                  Configura NEXT_PUBLIC_GOOGLE_MAPS_API_KEY para ver el mapa
+                </div>
+              )}
             </div>
           </section>
         )}
