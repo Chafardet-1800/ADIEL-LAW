@@ -2,19 +2,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // 👈 Importamos el router de Next.js
+import { useRouter } from "next/navigation";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "@/src/lib/firebase/config";
 import {
   loginExternalAPI,
-  checkRegistrationAPI,
   submitRegistrationAPI,
   LoginResponse,
 } from "@/src/services/clientApi";
 import Image from "next/image";
 import { getSessionCookie, setSessionCookie } from "@/src/actions/auth";
 
-// Función utilitaria para reconstruir la URL base del evento
 function slugify(text: string) {
   return text
     .toString()
@@ -27,59 +25,35 @@ function slugify(text: string) {
 }
 
 export default function RegistrationFormClient({ event }: { event: any }) {
-  const router = useRouter(); // 👈 Inicializamos el router
-
-  // Estados de control
+  const router = useRouter();
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [loadingState, setLoadingState] = useState<string>(
     "Verificando sesión...",
   );
-
-  // Estados del formulario
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Reconstruimos la URL del evento para la redirección
   const eventUrl = `/eventos/${slugify(event.name)}-${event.id}`;
 
-  // FUNCIÓN CENTRALIZADA DE REDIRECCIÓN (UX)
   const handleSuccessRedirect = () => {
     setIsRegistered(true);
     setLoadingState("");
-
-    // 1. Forzamos a Next.js a destruir la caché cliente y limpiar la memoria
-    router.refresh();
-
-    // Mostramos el mensaje de éxito y luego redirigimos automáticamente a los 2.5 segundos
+    router.refresh(); // Destruye caché del cliente
     setTimeout(() => {
       router.push(eventUrl);
     }, 2500);
   };
 
-  // 1. EVALUAR SESIÓN AL CARGAR LA VISTA
+  // 1. EVALUAR SESIÓN (Ya no bloquea si tienes registros previos)
   useEffect(() => {
     const initCheck = async () => {
       const token = (await getSessionCookie()) || "";
-
-      if (token) {
-        setSessionToken(token);
-        try {
-          setLoadingState("Verificando registro previo...");
-          const registration = await checkRegistrationAPI(event.id, token);
-          if (registration) {
-            handleSuccessRedirect(); // Si ya está registrado, disparamos el flujo de éxito
-            return; // Salimos temprano para no quitar el loadingState aún
-          }
-        } catch (error) {
-          console.error("Error al verificar registro:", error);
-        }
-      }
+      if (token) setSessionToken(token);
       setLoadingState("");
     };
     initCheck();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [event.id]);
+  }, []);
 
   // 2. MANEJAR LOGIN CON GOOGLE
   const handleGoogleLogin = async () => {
@@ -94,21 +68,10 @@ export default function RegistrationFormClient({ event }: { event: any }) {
 
       await setSessionCookie(newSessionToken);
       setSessionToken(newSessionToken);
-
-      setLoadingState("Validando estado del evento...");
-      const registration = await checkRegistrationAPI(
-        event.id,
-        newSessionToken,
-      );
-
-      if (registration) {
-        handleSuccessRedirect(); // 👈 Redirección automática tras login si ya estaba registrado
-      } else {
-        setLoadingState("");
-      }
     } catch (error) {
       console.error("Error en login:", error);
       alert("Hubo un error al iniciar sesión.");
+    } finally {
       setLoadingState("");
     }
   };
@@ -125,7 +88,7 @@ export default function RegistrationFormClient({ event }: { event: any }) {
     setIsSubmitting(true);
     try {
       await submitRegistrationAPI(event.id, formData, sessionToken);
-      handleSuccessRedirect(); // 👈 Redirección automática tras completar el formulario
+      handleSuccessRedirect();
     } catch (error) {
       console.error("Error enviando formulario:", error);
       alert("Hubo un error al completar tu registro.");
@@ -133,11 +96,8 @@ export default function RegistrationFormClient({ event }: { event: any }) {
     }
   };
 
-  // --- RENDERIZADO VISUAL PREMIUM (Compacto) ---
-
   if (loadingState) {
     return (
-      // Redujimos de min-h-screen a min-h-[80vh] para evitar scrolls enormes
       <div className="min-h-[80vh] flex flex-col items-center justify-center bg-blue-50/50">
         <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-700 rounded-full animate-spin mb-4" />
         <p className="text-blue-950 font-bold animate-pulse">{loadingState}</p>
@@ -146,15 +106,11 @@ export default function RegistrationFormClient({ event }: { event: any }) {
   }
 
   return (
-    // Contenedor centrado y más compacto
     <div className="min-h-[80vh] bg-linear-to-br from-blue-50/50 via-white to-blue-50 py-20 px-4 relative overflow-hidden flex justify-center items-center">
-      {/* Elementos Decorativos */}
       <div className="absolute top-0 left-0 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-400/15 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Contenedor Principal (Modal Style) */}
       <div className="max-w-xl w-full bg-white/90 backdrop-blur-2xl p-8 md:p-10 rounded-[2.5rem] shadow-2xl shadow-blue-900/10 border border-white relative z-10 animate-fade-in-up">
-        {/* ESCENARIO 1: Ya está registrado (Flujo de salida) */}
         {isRegistered ? (
           <div className="text-center py-6">
             <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-green-500/30 animate-bounce">
@@ -174,9 +130,7 @@ export default function RegistrationFormClient({ event }: { event: any }) {
             </div>
           </div>
         ) : (
-          // ESCENARIOS DE INGRESO (Login o Formulario)
           <>
-            {/* Cabecera compacta */}
             <div className="text-center mb-8">
               <span className="inline-block px-3 py-1 rounded-lg bg-blue-100 text-blue-700 text-xs font-bold tracking-wider uppercase mb-3">
                 Inscripción
@@ -186,7 +140,6 @@ export default function RegistrationFormClient({ event }: { event: any }) {
               </h1>
             </div>
 
-            {/* ESCENARIO 2: Necesita Iniciar Sesión */}
             {!sessionToken ? (
               <div className="text-center">
                 <div className="bg-blue-50/50 p-6 rounded-3xl border border-blue-100 mb-6">
@@ -214,7 +167,6 @@ export default function RegistrationFormClient({ event }: { event: any }) {
                 </button>
               </div>
             ) : (
-              /* ESCENARIO 3: Formulario Activo */
               <form onSubmit={handleSubmit} className="space-y-5">
                 {event.form_fields?.map((field: any) => (
                   <div key={field.key} className="flex flex-col gap-1.5">

@@ -91,7 +91,7 @@ interface Lead {
   lastname: string;
   phone_number: string;
 }
-interface Creator {
+export interface Creator {
   name: string;
 }
 export interface Deliverable {
